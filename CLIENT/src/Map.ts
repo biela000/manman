@@ -8,7 +8,7 @@ export default class Map {
 
   private readonly BLOCK_SIZE = 32;
 
-  private readonly BREAKABLE_WALL_COUNT = 10;
+  private readonly BREAKABLE_WALL_COUNT = 40;
 
   private breakableWallPositions: Array<[number, number]> = [];
 
@@ -18,16 +18,15 @@ export default class Map {
 
   private ctx: CanvasRenderingContext2D;
 
-  private spriteSheet: HTMLImageElement;
+  private readonly spriteSheet: HTMLImageElement;
 
-  public constructor(ctx: CanvasRenderingContext2D) {
+  private readonly baseMap: HTMLImageElement;
+
+  public constructor(ctx: CanvasRenderingContext2D, spriteSheet: HTMLImageElement, baseMap: HTMLImageElement) {
     this.ctx = ctx;
-    this.spriteSheet = new Image();
-    this.spriteSheet.src = '/spritesheet.png';
+    this.spriteSheet = spriteSheet;
+    this.baseMap = baseMap;
     this.generateBreakableWallPositions();
-    this.spriteSheet.onload = () => {
-      this.generateCanvasMap();
-    };
     // this.generateBalloonPositions();
   }
 
@@ -49,41 +48,23 @@ export default class Map {
   }
 
   public generateCanvasMap(): void {
-    // Fill the whole canvas with green color
-    this.ctx.fillStyle = 'green';
-    this.ctx.fillRect(0, 0, this.WIDTH * this.BLOCK_SIZE, this.HEIGHT * this.BLOCK_SIZE);
-
-    // Fill the top and bottom rows with unbreakable walls
-    for (let i = 0; i < this.WIDTH; i += 1) {
-      this.drawUnbreakableWall(i, 0);
-      this.drawUnbreakableWall(i, this.HEIGHT - 1);
-    }
-
-    // Fill the left and right columns with unbreakable walls
-    for (let i = 1; i < this.HEIGHT - 1; i += 1) {
-      this.drawUnbreakableWall(0, i);
-      this.drawUnbreakableWall(this.WIDTH - 1, i);
-    }
-
-    // Fill every remaining position with x and y even with unbreakable walls
-    for (let y = 2; y < this.HEIGHT - 2; y += 2) {
-      for (let x = 2; x < this.WIDTH - 2; x += 2) {
-        this.drawUnbreakableWall(x, y);
-      }
-    }
+    this.ctx.drawImage(this.baseMap, 0, 0);
+    this.drawBreakableWalls();
   }
 
-  private drawUnbreakableWall(x: number, y: number): void {
-    this.ctx.drawImage(
-      this.spriteSheet,
-      animations.wall.unbreakable.x,
-      animations.wall.unbreakable.y,
-      animations.wall.unbreakable.width,
-      animations.wall.unbreakable.height,
-      x * this.BLOCK_SIZE,
-      y * this.BLOCK_SIZE,
-      this.BLOCK_SIZE,
-      this.BLOCK_SIZE,
-    );
+  private drawBreakableWalls(): void {
+    this.breakableWallPositions.forEach(([x, y]) => {
+      this.ctx.drawImage(
+        this.spriteSheet,
+        animations.wall.breakable.x,
+        animations.wall.breakable.y,
+        animations.wall.breakable.width,
+        animations.wall.breakable.height,
+        x * this.BLOCK_SIZE,
+        y * this.BLOCK_SIZE,
+        this.BLOCK_SIZE,
+        this.BLOCK_SIZE,
+      );
+    });
   }
 }

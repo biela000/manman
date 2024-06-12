@@ -20,6 +20,7 @@ class Map
 {
     private const WIDTH = 31;
     private const HEIGHT = 13;
+    private const BLOCK_SIZE_PX = 32;
     private array $map = BASE_MAP;
     private const BREAKABLE_WALL_COUNT = 40;
 
@@ -48,5 +49,18 @@ class Map
 
     public function getMap(): void {
         print_r($this->map);
+    }
+
+    public function getDimensions(): array
+    {
+        return [
+            'width' => self::WIDTH,
+            'height' => self::HEIGHT
+        ];
+    }
+
+    public function getBlockSizePx(): int
+    {
+        return self::BLOCK_SIZE_PX;
     }
 }

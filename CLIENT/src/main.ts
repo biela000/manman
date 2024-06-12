@@ -1,4 +1,5 @@
 import Map from './Map';
+import Game from './Game';
 
 const canvas = document.getElementById('game') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
@@ -14,5 +15,8 @@ spriteSheet.onload = () => {
     // Start the game
     const map = new Map(ctx, spriteSheet, baseMap);
     map.generateCanvasMap();
+
+    const game = new Game();
+    game.start();
   };
 };

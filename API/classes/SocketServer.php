@@ -22,6 +22,7 @@ class SocketServer {
     public function start(): void {
         $this->running = true;
         while ($this->running) {
+            echo "Server is running\n";
             $writeStreams = NULL;
             $exceptStreams = NULL;
             $changedStreams = $this->clients;

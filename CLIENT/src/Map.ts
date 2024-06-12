@@ -22,7 +22,11 @@ export default class Map {
 
   private readonly baseMap: HTMLImageElement;
 
-  public constructor(ctx: CanvasRenderingContext2D, spriteSheet: HTMLImageElement, baseMap: HTMLImageElement) {
+  public constructor(
+    ctx: CanvasRenderingContext2D,
+    spriteSheet: HTMLImageElement,
+    baseMap: HTMLImageElement,
+  ) {
     this.ctx = ctx;
     this.spriteSheet = spriteSheet;
     this.baseMap = baseMap;

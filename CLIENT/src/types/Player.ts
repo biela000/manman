@@ -1,4 +1,4 @@
-export type PlayerPositionArray = Array<{ ipAddress: string, position: [number, number] }>;
+export type PlayerPositions = Map<string, [number, number]>;
 
 type Player = {
   id: string;

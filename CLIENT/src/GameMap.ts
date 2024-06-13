@@ -1,7 +1,7 @@
 import animations from '../data/animations.json';
-import { PlayerPositionArray } from './types/Player';
+import { PlayerPositions } from './types/Player';
 
-export default class Map {
+export default class GameMap {
   private readonly WIDTH = 31;
 
   private readonly HEIGHT = 13;
@@ -12,7 +12,7 @@ export default class Map {
 
   private breakableWallPositions: Array<[number, number]> = [];
 
-  private playerPositions: PlayerPositionArray = [];
+  private playerPositions: PlayerPositions = new Map<string, [number, number]>();
 
   private balloonPositions: Array<[number, number]> = [];
 
@@ -47,20 +47,20 @@ export default class Map {
     this.drawBreakableWalls();
   }
 
-  public setPlayerPositions(playerPositions: PlayerPositionArray): void {
-    this.playerPositions = [...playerPositions];
+  public setPlayerPositions(playerPositions: PlayerPositions): void {
+    this.playerPositions = playerPositions;
   }
 
   public drawPlayers(): void {
-    this.playerPositions.forEach(({ position }) => {
+    this.playerPositions.forEach(([x, y], ipAddress) => {
       this.ctx.drawImage(
         this.spriteSheet,
         animations.player.down.frames[1].x,
         animations.player.down.frames[1].y,
         animations.player.down.frames[1].width,
         animations.player.down.frames[1].height,
-        position[0],
-        position[1],
+        x,
+        y,
         this.BLOCK_SIZE,
         this.BLOCK_SIZE,
       );

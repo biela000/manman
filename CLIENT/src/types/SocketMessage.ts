@@ -3,7 +3,7 @@ import Player from './Player';
 export type UpdateMessage = {
   type: 'UPDATE';
   payload: {
-    players: Player[]
+    players: { [key: string]: Player };
     map: {
       raw: string[];
       breakableWallPositions: Array<[number, number]>;

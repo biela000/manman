@@ -71,7 +71,7 @@ class Game
         $serializedPlayers = [];
 
         foreach ($this->players as $player) {
-            $serializedPlayers[] = $player->serialize();
+            $serializedPlayers[$player->getIpAddress()] = $player->serialize();
         }
 
         $this->server->sendMessage($clients, json_encode(

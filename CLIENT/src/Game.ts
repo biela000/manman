@@ -1,11 +1,11 @@
 import SocketClient from './SocketClient';
-import Map from './Map';
-import SocketMessage from './types/SocketMessage.ts';
+import GameMap from './GameMap';
+import SocketMessage from './types/SocketMessage';
 
 export default class Game {
   private socketClient: SocketClient | null = null;
 
-  private map: Map | null = null;
+  private map: GameMap | null = null;
 
   private clientIpAddress: string | null = null;
 
@@ -25,7 +25,7 @@ export default class Game {
 
     spriteSheet.onload = () => {
       baseMap.onload = () => {
-        this.map = new Map(ctx, spriteSheet, baseMap);
+        this.map = new GameMap(ctx, spriteSheet, baseMap);
         this.map.generateCanvasMap();
       };
     };
@@ -51,7 +51,13 @@ export default class Game {
       case 'UPDATE':
         this.map?.setBreakableWallPositions(payload.map.breakableWallPositions);
         this.map?.generateCanvasMap();
-        this.map?.setPlayerPositions(payload.players.map((player) => ({ ipAddress: player.ipAddress, position: player.position })));
+
+        const playerPositions = new Map<string, [number, number]>();
+        Object.entries(payload.players).forEach(([ipAddress, player]) => {
+          playerPositions.set(ipAddress, [player.position[0], player.position[1]]);
+        });
+
+        this.map?.setPlayerPositions(playerPositions);
         this.map?.drawPlayers();
         break;
       default:

@@ -1,4 +1,4 @@
-import Map from './Map';
+import GameMap from './GameMap.ts';
 import Game from './Game';
 
 const canvas = document.getElementById('game') as HTMLCanvasElement;
@@ -13,7 +13,7 @@ baseMap.src = '/map.png';
 spriteSheet.onload = () => {
   baseMap.onload = () => {
     // Start the game
-    const map = new Map(ctx, spriteSheet, baseMap);
+    const map = new GameMap(ctx, spriteSheet, baseMap);
     map.generateCanvasMap();
 
     const game = new Game();

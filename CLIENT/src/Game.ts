@@ -1,10 +1,13 @@
 import SocketClient from './SocketClient';
 import Map from './Map';
+import SocketMessage from './types/SocketMessage.ts';
 
 export default class Game {
   private socketClient: SocketClient | null = null;
 
   private map: Map | null = null;
+
+  private clientIpAddress: string | null = null;
 
   public constructor() {
     // Something's gonna be here i swear
@@ -35,19 +38,23 @@ export default class Game {
   }
 
   private onSocketMessage(event: MessageEvent) {
-    const message = JSON.parse(event.data);
+    const message = JSON.parse(event.data) as SocketMessage;
     const { type, payload } = message;
 
     switch (type) {
+      case 'CONNECTED':
+        this.clientIpAddress = payload.ipAddress;
+        // this.bindKeys();
+        break;
       case 'UPDATE':
-        console.log('Payload map');
-        console.log(payload.map);
         this.map?.setBreakableWallPositions(payload.map.breakableWallPositions);
         this.map?.generateCanvasMap();
         break;
       default:
         break;
     }
+
+    console.log(this.clientIpAddress, this.map);
   }
 
   private bindKeys() {

@@ -28,6 +28,15 @@ class Game
     {
         $player = new Player($client, self::PLAYER_STARTING_POSITION);
         $this->players[$player->getIpAddress()] = $player;
+
+        $this->server->sendMessage([$client], json_encode(
+            [
+                'type' => 'CONNECTED',
+                'payload' => [
+                    'ipAddress' => $player->getIpAddress()
+                ]
+            ]
+        ));
     }
 
     public function handleSocketMessage($client, $message): void

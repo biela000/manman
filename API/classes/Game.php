@@ -61,8 +61,14 @@ class Game
     {
         $this->server->sendMessage($clients, json_encode(
             [
-                'players' => $this->players,
-                'map' => $this->map->getMap()
+                'type' => 'UPDATE',
+                'payload' => [
+                    'players' => $this->players,
+                    'map' => [
+                        'raw' => $this->map->getRawMap(),
+                        'breakableWallPositions' => $this->map->getBreakableWallPositions(),
+                    ]
+                ]
             ]
         ));
     }

@@ -1,4 +1,3 @@
-import { POSSIBLE_BREAKABLE_WALL_POSITIONS } from './constants';
 import animations from '../data/animations.json';
 
 export default class Map {
@@ -30,21 +29,11 @@ export default class Map {
     this.ctx = ctx;
     this.spriteSheet = spriteSheet;
     this.baseMap = baseMap;
-    this.generateBreakableWallPositions();
     // this.generateBalloonPositions();
   }
 
-  private generateBreakableWallPositions(): void {
-    const possiblePositions = [...POSSIBLE_BREAKABLE_WALL_POSITIONS];
-    for (let i = 0; i < this.BREAKABLE_WALL_COUNT; i += 1) {
-      const randomIndex = Math.floor(
-        Math.random() * possiblePositions.length,
-      );
-      this.breakableWallPositions.push(
-        possiblePositions[randomIndex],
-      );
-      possiblePositions.splice(randomIndex, 1);
-    }
+  public setBreakableWallPositions(breakableWallPositions: Array<[number, number]>): void {
+    this.breakableWallPositions = [...breakableWallPositions];
   }
 
   public getBreakableWallPositions(): Array<[number, number]> {
@@ -52,6 +41,7 @@ export default class Map {
   }
 
   public generateCanvasMap(): void {
+    this.ctx.clearRect(0, 0, this.WIDTH * this.BLOCK_SIZE, this.HEIGHT * this.BLOCK_SIZE);
     this.ctx.drawImage(this.baseMap, 0, 0);
     this.drawBreakableWalls();
   }

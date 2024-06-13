@@ -21,8 +21,9 @@ class Map
     private const WIDTH = 31;
     private const HEIGHT = 13;
     private const BLOCK_SIZE_PX = 32;
-    private array $map = BASE_MAP;
+    private array $raw = BASE_MAP;
     private const BREAKABLE_WALL_COUNT = 40;
+    private array $breakableWallPositions = [];
 
     public function __construct()
     {
@@ -38,8 +39,10 @@ class Map
             $x = $breakableWallPosition[0];
             $y = $breakableWallPosition[1];
 
-            $this->map[$y][$x] = Block::BREAKABLE_WALL->value;
+            $this->raw[$y][$x] = Block::BREAKABLE_WALL->value;
             $breakableWallCount++;
+
+            $this->breakableWallPositions[] = $breakableWallPosition;
 
             $possibleBreakableWallPositions = array_filter($possibleBreakableWallPositions, function ($position) use ($x, $y) {
                 return $position[0] !== $x || $position[1] !== $y;
@@ -47,8 +50,12 @@ class Map
         }
     }
 
-    public function getMap(): array {
-        return $this->map;
+    public function getRawMap(): array {
+        return $this->raw;
+    }
+
+    public function getBreakableWallPositions(): array {
+        return $this->breakableWallPositions;
     }
 
     public function getDimensions(): array

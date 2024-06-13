@@ -41,6 +41,8 @@ export default class Game {
     const message = JSON.parse(event.data) as SocketMessage;
     const { type, payload } = message;
 
+    console.log(payload);
+
     switch (type) {
       case 'CONNECTED':
         this.clientIpAddress = payload.ipAddress;
@@ -49,6 +51,8 @@ export default class Game {
       case 'UPDATE':
         this.map?.setBreakableWallPositions(payload.map.breakableWallPositions);
         this.map?.generateCanvasMap();
+        this.map?.setPlayerPositions(payload.players.map((player) => ({ ipAddress: player.ipAddress, position: player.position })));
+        this.map?.drawPlayers();
         break;
       default:
         break;

@@ -68,11 +68,17 @@ class Game
 
     public function handleSocketTick($clients): void
     {
+        $serializedPlayers = [];
+
+        foreach ($this->players as $player) {
+            $serializedPlayers[] = $player->serialize();
+        }
+
         $this->server->sendMessage($clients, json_encode(
             [
                 'type' => 'UPDATE',
                 'payload' => [
-                    'players' => $this->players,
+                    'players' => $serializedPlayers,
                     'map' => [
                         'raw' => $this->map->getRawMap(),
                         'breakableWallPositions' => $this->map->getBreakableWallPositions(),

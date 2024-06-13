@@ -75,4 +75,14 @@ class Player
     {
         return time() - $this->lastBombTimestamp > 3000;
     }
+
+    public function serialize(): array
+    {
+        return [
+            'id' => $this->id,
+            'ipAddress' => $this->getIpAddress(),
+            'position' => $this->position,
+            'lastBombTimestamp' => $this->lastBombTimestamp
+        ];
+    }
 }

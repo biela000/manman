@@ -43,30 +43,24 @@ class Game
     {
         $player = $this->players[stream_socket_get_name($client, true)];
 
-        $playerPosition = $player->getPosition();
-
         switch ($message) {
             case 'UP':
-                $player->moveUp();
+                $player->moveUp($this->map);
                 break;
             case 'DOWN':
-                $player->moveDown();
+                $player->moveDown($this->map);
                 break;
             case 'LEFT':
-                $player->moveLeft();
+                $player->moveLeft($this->map);
                 break;
             case 'RIGHT':
-                $player->moveRight();
+                $player->moveRight($this->map);
                 break;
             case 'BOMB':
                 $player->placeBomb($this->map);
                 break;
             default:
                 break;
-        }
-
-        if ($this->map->isPlayerColliding($player->getPosition())) {
-            $player->setPosition($playerPosition);
         }
 
         print_r($this->players);

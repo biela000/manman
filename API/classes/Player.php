@@ -6,7 +6,7 @@ require_once __DIR__ . '/Map.php';
 
 class Player
 {
-    private const MOVE_SPEED = 2;
+    private const MOVE_SPEED = 4;
 
     private string $id;
     private mixed $socketClient;
@@ -26,23 +26,61 @@ class Player
         return $this->id;
     }
 
-    public function moveUp(): void
+    public function moveUp(Map $map): void
     {
+        if ($map->isPlayerColliding([$this->position[0], $this->position[1] - self::MOVE_SPEED])) {
+            $this->moveToCloserHorizontalBlock($map);
+            return;
+        }
+
         $this->position[1] -= self::MOVE_SPEED;
     }
 
-    public function moveDown(): void
+    public function moveToCloserHorizontalBlock(Map $map): void {
+        $closerXBlockPosition = round($this->position[0] / (float)$map->getBlockSizePx()) * $map->getBlockSizePx();
+        if ($closerXBlockPosition - $this->position[0] < 16 && $closerXBlockPosition > $this->position[0]  && !$map->isPlayerColliding([$this->position[0] + self::MOVE_SPEED, $this->position[1]])) {
+            $this->position[0] += self::MOVE_SPEED;
+        } elseif ($this->position[0] - $closerXBlockPosition < 16 && $closerXBlockPosition < $this->position[0] && !$map->isPlayerColliding([$this->position[0] - self::MOVE_SPEED, $this->position[1]])) {
+            $this->position[0] -= self::MOVE_SPEED;
+        }
+    }
+
+    public function moveDown(Map $map): void
     {
+        if ($map->isPlayerColliding([$this->position[0], $this->position[1] + self::MOVE_SPEED])) {
+            $this->moveToCloserHorizontalBlock($map);
+            return;
+        }
+
         $this->position[1] += self::MOVE_SPEED;
     }
 
-    public function moveLeft(): void
+    public function moveLeft(Map $map): void
     {
+        if ($map->isPlayerColliding([$this->position[0] - self::MOVE_SPEED, $this->position[1]])) {
+            $this->moveToCloserVerticalBlock($map);
+            return;
+        }
+
         $this->position[0] -= self::MOVE_SPEED;
     }
 
-    public function moveRight(): void
+    public function moveToCloserVerticalBlock(Map $map): void {
+        $closerYBlockPosition = round($this->position[1] / (float)$map->getBlockSizePx()) * $map->getBlockSizePx();
+        if ($closerYBlockPosition - $this->position[1] < 16 && $closerYBlockPosition > $this->position[1] && !$map->isPlayerColliding([$this->position[0], $this->position[1] + self::MOVE_SPEED])) {
+            $this->position[1] += self::MOVE_SPEED;
+        } elseif ($this->position[1] - $closerYBlockPosition < 16 && $closerYBlockPosition < $this->position[1] && !$map->isPlayerColliding([$this->position[0], $this->position[1] - self::MOVE_SPEED])) {
+            $this->position[1] -= self::MOVE_SPEED;
+        }
+    }
+
+    public function moveRight(Map $map): void
     {
+        if ($map->isPlayerColliding([$this->position[0] + self::MOVE_SPEED, $this->position[1]])) {
+            $this->moveToCloserVerticalBlock($map);
+            return;
+        }
+
         $this->position[0] += self::MOVE_SPEED;
     }
 

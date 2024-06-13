@@ -78,6 +78,8 @@ class Map
         ];
 
         return ($this->raw[ceil($playerBlockPosition[1])][ceil($playerBlockPosition[0])] != Block::EMPTY->value
-            || $this->raw[floor($playerBlockPosition[1])][floor($playerBlockPosition[0])] != Block::EMPTY->value);
+            || $this->raw[floor($playerBlockPosition[1])][floor($playerBlockPosition[0])] != Block::EMPTY->value
+            || $this->raw[ceil($playerBlockPosition[1])][floor($playerBlockPosition[0])] != Block::EMPTY->value
+            || $this->raw[floor($playerBlockPosition[1])][ceil($playerBlockPosition[0])] != Block::EMPTY->value);
     }
 }

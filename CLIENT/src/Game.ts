@@ -14,4 +14,25 @@ export default class Game {
   private connect() {
     this.socketClient = new SocketClient();
   }
+
+  private bindKeys() {
+    document.addEventListener('keydown', (event) => {
+      switch (event.key) {
+        case 'ArrowUp':
+          this.socketClient?.send('UP');
+          break;
+        case 'ArrowDown':
+          this.socketClient?.send('DOWN');
+          break;
+        case 'ArrowLeft':
+          this.socketClient?.send('LEFT');
+          break;
+        case 'ArrowRight':
+          this.socketClient?.send('RIGHT');
+          break;
+        default:
+          break;
+      }
+    });
+  }
 }

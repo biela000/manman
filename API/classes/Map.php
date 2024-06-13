@@ -47,8 +47,8 @@ class Map
         }
     }
 
-    public function getMap(): void {
-        print_r($this->map);
+    public function getMap(): array {
+        return $this->map;
     }
 
     public function getDimensions(): array

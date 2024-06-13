@@ -2,7 +2,8 @@
 
 namespace Game;
 
-class SocketServer {
+class SocketServer
+{
     private const HOST = '127.0.0.1';
     private const PORT = 46089;
     private const TRANSPORT = 'http';
@@ -10,7 +11,8 @@ class SocketServer {
     private array $clients;
     private bool $running = false;
 
-    public function __construct() {
+    public function __construct()
+    {
         $this->server = stream_socket_server("tcp://" . self::HOST . ":" . self::PORT, $errorNumber, $errorMessage);
         if (!$this->server) {
             die("$errorMessage ($errorNumber)");
@@ -19,14 +21,15 @@ class SocketServer {
         $this->clients = array($this->server);
     }
 
-    public function start(): void {
+    public function start(array $handleConnection, array $handleMessage, array $handleTick): void
+    {
         $this->running = true;
         while ($this->running) {
             echo "Server is running\n";
             $writeStreams = NULL;
             $exceptStreams = NULL;
             $changedStreams = $this->clients;
-            stream_select($changedStreams, $writeStreams, $exceptStreams, 4); // 4s - TICKI!!!!!
+            stream_select($changedStreams, $writeStreams, $exceptStreams, 1);
 
             if (in_array($this->server, $changedStreams)) {
                 $client = @stream_socket_accept($this->server);
@@ -36,23 +39,19 @@ class SocketServer {
                 }
                 $this->clients[] = $client;
                 $ip = stream_socket_get_name($client, true);
-                echo "New Client connected from $ip\n";
 
                 stream_set_blocking($client, true);
                 $headers = fread($client, 1500);
                 $this->handshake($client, $headers);
                 stream_set_blocking($client, false);
 
-                $data = ["msg" => "Client connected"];
-
-                $this->sendMessage($this->clients, $this->mask(json_encode($data))); //połączenie -> aktualne dane
+                call_user_func($handleConnection, $client);
 
                 $found_socket = array_search($this->server, $changedStreams);
                 unset($changedStreams[$found_socket]);
             }
 
             foreach ($changedStreams as $changed_socket) {   // wiadomość od klienta
-                // Replace this code with a handling function passed in the constructor later
                 print_r($changed_socket);
 
                 $ip = stream_socket_get_name($changed_socket, true);
@@ -70,15 +69,15 @@ class SocketServer {
                     echo "\nReceived a Message from $ip:\n\"$unmasked\" \n";
                 }
 
-                $response = $this->mask($unmasked);
-                $this->sendMessage($this->clients, $response);
+                call_user_func($handleMessage, $changed_socket, $unmasked);
             }
 
-            $this->sendMessage($this->clients, $this->mask(json_encode(["msg" => "tick"])));
+            call_user_func($handleTick, $this->clients);
         }
     }
 
-    public function stop(): bool {
+    public function stop(): bool
+    {
         $this->running = false;
         return fclose($this->server);
     }
@@ -142,7 +141,7 @@ class SocketServer {
     public function sendMessage($clients, $msg): void
     {
         foreach ($clients as $changed_socket) {
-            @fwrite($changed_socket, $msg);
+            @fwrite($changed_socket, $this->mask($msg));
         }
     }
 }

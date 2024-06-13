@@ -6,17 +6,17 @@ require_once __DIR__ . '/Map.php';
 
 class Player
 {
-    private const MOVE_SPEED = 1;
+    private const MOVE_SPEED = 2;
 
     private string $id;
-    private string $ipAddress;
+    private mixed $socketClient;
     private array $position;
     private int $lastBombTimestamp;
 
-    public function __construct(string $ipAddress, array $position)
+    public function __construct(mixed $socketClient, array $position)
     {
         $this->id = uniqid();
-        $this->ipAddress = $ipAddress;
+        $this->socketClient = $socketClient;
         $this->position = $position;
         $this->lastBombTimestamp = 0;
     }
@@ -64,6 +64,11 @@ class Player
     public function getPosition(): array
     {
         return $this->position;
+    }
+
+    public function getIpAddress(): string
+    {
+        return stream_socket_get_name($this->socketClient, true);
     }
 
     public function canPlaceBomb(): bool

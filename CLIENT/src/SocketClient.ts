@@ -9,9 +9,10 @@ export default class SocketClient {
 
   private onOpen(): void {
     console.log('Connected to server');
+    // this.socket.send('UP');
   }
 
   private onMessage(event: MessageEvent): void {
-    console.log('Message received:', event.data);
+    console.log('Message received:', JSON.parse(event.data));
   }
 }

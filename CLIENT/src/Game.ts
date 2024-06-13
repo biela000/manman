@@ -46,7 +46,7 @@ export default class Game {
     switch (type) {
       case 'CONNECTED':
         this.clientIpAddress = payload.ipAddress;
-        // this.bindKeys();
+        this.bindKeys();
         break;
       case 'UPDATE':
         this.map?.setBreakableWallPositions(payload.map.breakableWallPositions);

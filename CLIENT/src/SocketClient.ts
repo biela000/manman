@@ -11,4 +11,8 @@ export default class SocketClient {
     console.log('Connected to server');
     // this.socket.send('UP');
   }
+
+  public send(message: string): void {
+    this.socket.send(message);
+  }
 }

@@ -66,6 +66,11 @@ class Player
         return $this->position;
     }
 
+    public function setPosition(array $position): void
+    {
+        $this->position = $position;
+    }
+
     public function getIpAddress(): string
     {
         return stream_socket_get_name($this->socketClient, true);

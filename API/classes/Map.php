@@ -70,4 +70,14 @@ class Map
     {
         return self::BLOCK_SIZE_PX;
     }
+
+    public function isPlayerColliding(array $position): bool {
+        $playerBlockPosition = [
+            $position[0] / (float)$this->getBlockSizePx(),
+            $position[1] / (float)$this->getBlockSizePx()
+        ];
+
+        return ($this->raw[ceil($playerBlockPosition[1])][ceil($playerBlockPosition[0])] != Block::EMPTY->value
+            || $this->raw[floor($playerBlockPosition[1])][floor($playerBlockPosition[0])] != Block::EMPTY->value);
+    }
 }

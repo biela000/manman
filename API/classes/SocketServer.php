@@ -29,7 +29,7 @@ class SocketServer
             $writeStreams = NULL;
             $exceptStreams = NULL;
             $changedStreams = $this->clients;
-            stream_select($changedStreams, $writeStreams, $exceptStreams, 0, 500000);
+            stream_select($changedStreams, $writeStreams, $exceptStreams, 0, 50000);
 
             if (in_array($this->server, $changedStreams)) {
                 $client = @stream_socket_accept($this->server);

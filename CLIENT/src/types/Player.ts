@@ -1,4 +1,6 @@
-export type PlayerPositions = Map<string, [number, number]>;
+import Animation from '../Animation';
+
+export type PlayerMapProps = Map<string, { position: [number, number]; animation: Animation | undefined }>;
 
 type Player = {
   id: string;

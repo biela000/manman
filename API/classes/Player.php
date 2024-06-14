@@ -84,18 +84,22 @@ class Player
         $this->position[0] += self::MOVE_SPEED;
     }
 
-    public function placeBomb(Map $map): array
+    public function placeBomb(Map $map): array | NULL
     {
-        $this->lastBombTimestamp = time();
+        if (!$this->canPlaceBomb()) {
+            return NULL;
+        }
+        $this->lastBombTimestamp = floor(microtime(true) * 1000);
 
         $playerBlockPosition = [
-            round($this->position[0] / $map->getDimensions()['width']),
-            round($this->position[1] / $map->getDimensions()['height'])
+            round($this->position[0] / (float)$map->getBlockSizePx()),
+            round($this->position[1] / (float)$map->getBlockSizePx())
         ];
 
         return [
             $playerBlockPosition[0] * $map->getBlockSizePx(),
-            $playerBlockPosition[1] * $map->getBlockSizePx()
+            $playerBlockPosition[1] * $map->getBlockSizePx(),
+            $this->lastBombTimestamp
         ];
     }
 
@@ -116,7 +120,7 @@ class Player
 
     public function canPlaceBomb(): bool
     {
-        return time() - $this->lastBombTimestamp > 3000;
+        return floor(microtime(true) * 1000) - $this->lastBombTimestamp > 3000;
     }
 
     public function serialize(): array
